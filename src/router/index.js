@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Signin from '../views/Signin.vue'
 import Login from '../views/Login.vue'
+import Create from '../views/Create.vue'
+import Update from '../views/Update.vue'
 
 const routes = [
     {
@@ -19,6 +21,17 @@ const routes = [
         name: '/login',
         component: Login
     },
+     {
+        path: '/task-create',
+        name: '/create',
+        component: Create
+    },
+    {
+        path: '/task-update/:id',
+        name: '/update',
+        component: Update
+    },
+
 
 ]
 
