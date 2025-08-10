@@ -1,43 +1,54 @@
 <script setup lang="ts">
 import axios from 'axios';
 import Header from '../components/Header.vue';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, reactive, ref, type Ref } from 'vue';
+//@ts-ignore
+import ModalError from '../utils/ModalError.vue'
+//@ts-ignore
+import ModalWarn from '../utils/ModalWarn.vue';
 
 const API_URL =  import.meta.env.VITE_API_URL;
-let taskUp = ref(true);
-const tasks = ref([])
+let taskIdDelete:string = ""
+let errorMessage = reactive([""])
+let habilitaModalDelete: Ref<boolean> = ref(false)
+let habilitaModalErro: Ref<boolean> = ref(false)
+
+const tasks: Ref<{id:string; title:string; is_done:boolean; description:string}[]> = ref([])
 
  onBeforeMount(() => { axios.get(`${API_URL}/get-all-tasks`)
   .then((res)=>{
-  console.log(res.data)
   tasks.value = res.data;
  })
  .catch((error=>{
   console.error(error.response?.data || error.message)
+  errorMessage = error.message;
+  habilitaModalErro.value = true
  }))
 })
 
 
-
-function taskUpdate(){
-  taskUp = !taskUp
-  console.log(taskUp)
-}
-
- function deleteTask(id){
-  axios.delete(`${API_URL}/delete-task/${id}`)
-  .then((res)=> {tasks.value = tasks.value.filter(task => task.id !== id)} )
+ function removeTaskDeletedFromTasks(){
+  axios.delete(`${API_URL}/delete-task/${taskIdDelete}`)
+  .then((res)=> {
+    tasks.value = tasks.value.filter(task => task.id !== taskIdDelete);
+    habilitaModalDelete.value = false
+  })
   .catch((error=>{
-  console.error(error.response?.data || error.message)
+   console.error(error.response?.data || error.message)
+  errorMessage = error.message;
+  habilitaModalErro.value = true
  }))
 }
+ 
+function modalDelete(id:string){
+  taskIdDelete = id
+  habilitaModalDelete.value = true
 
-function getOneTask(id){
-  axios.get(`${API_URL}/get-one-task/${id}`)
-  .then((res) )
-  .catch((error=>{
-    console.error(error.response?.data || error.message)
-  }))
+}
+
+function closeModal(){
+  habilitaModalDelete.value = false
+  habilitaModalErro.value = false
 }
 
 </script>
@@ -72,7 +83,7 @@ function getOneTask(id){
             <div class="trash-container d-flex justify-content-center align-items-center">
               <img
                 src="../assets/trash-icon.png"
-                @click="deleteTask(task.id)"
+                @click="modalDelete(task.id)"
               />
             </div>
           </div>
@@ -80,7 +91,10 @@ function getOneTask(id){
 
       </div>
     </div>
-  </div>
+    <ModalWarn v-show="habilitaModalDelete" @close="closeModal" @delete="removeTaskDeletedFromTasks" />
+    <ModalError v-if="habilitaModalErro" @close="closeModal" :ref="errorMessage" />
+ </div>
+
 </template>
 
 <style>

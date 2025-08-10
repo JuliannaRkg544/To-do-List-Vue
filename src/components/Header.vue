@@ -15,6 +15,10 @@
   font-size: 35px;
 }
 
+.title:hover{
+  cursor: pointer;
+  color: #fefefe;
+}
 
 .green{
     background-color: #8FC549 !important ;

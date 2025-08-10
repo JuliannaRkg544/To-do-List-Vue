@@ -2,7 +2,7 @@
   <Header/>
  
     <div class="container mt-3 flex mb-3 " style="max-width: 600px;" >
-          <label for="descricao" class="form-label task-title ms-2">{{ taskLocal.title }}</label>
+          <input type="text" class="form-label task-title" style="border: none;" id="email" v-model="taskLocal.title">
           <textarea class="form-control" id="descricao" v-model="taskLocal.description" rows="3" ></textarea>
           <div class="btn-box mt-1" >
           <div class="btn btn-primary" style="background-color:#8fc549; font-weight: 600; border: none; margin-right: 5px;" @click="updateTask"> Salvar </div>
@@ -12,24 +12,25 @@
           </div>
     </div>
 </template>
-<script setup>
-import { RouterLink, useRoute } from 'vue-router'
+<script setup lang="ts" >
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
-import { computed, defineProps, onMounted, reactive, watch } from 'vue';
+import { onMounted, reactive } from 'vue';
+
 import axios from 'axios';
 const route = useRoute()
+const router = useRouter()
 const taskid = route.params.id
 const API_URL =  import.meta.env.VITE_API_URL;
 let taskLocal = reactive({
   title: '',
   description: ''
 })
+
 onMounted(()=>{
   axios.get(`${API_URL}/get-task-byId/${taskid}`)
   .then((res)=>{
-    console.log(res.data)
     Object.assign(taskLocal,res.data)
-    console.log(taskLocal)
   })
   .catch((error=>{
   console.error(error.response?.data || error.message)
@@ -42,7 +43,7 @@ function updateTask(){
     description: taskLocal.description
   }
   axios.patch(`${API_URL}/update-task/${taskid}`, body)
-
+  .then(()=> router.push("/"))
 }
  
 </script>

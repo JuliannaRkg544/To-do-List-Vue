@@ -11,29 +11,50 @@
           <div  class="btn" style="background-color:#fff;  border: none; font-weight: 600; color: #8fc549; " > Cancelar </div>
           </RouterLink>
           </div>
+          <ModalError v-show="habilitaModalErro" @close="closeModal" :refError="errorCreate" />
     </div>
 </template>
-<script setup>
-import { RouterLink, useRoute } from 'vue-router'
+<script setup lang="ts">
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
-import { computed, defineProps, onMounted, reactive, watch } from 'vue';
+import {reactive, ref } from 'vue';
 import axios from 'axios';
-const route = useRoute()
-const taskid = route.params.id
+//@ts-ignore
+import ModalWarn from '../utils/ModalWarn.vue';
+//@ts-ignore
+import ModalError from '../utils/ModalError.vue';
+
 const API_URL =  import.meta.env.VITE_API_URL;
+
+const router = useRouter()
+let habilitaModalErro = ref(false)
+let errorCreate = reactive([""])
+
 let taskLocal = reactive({
   title: '',
   description: ''
 })
 
 
+function closeModal(){
+  habilitaModalErro.value = false
+}
 function createTask(){
-  console.log(taskLocal)
-  const body = {
-    title: taskLocal.title,
-    description:taskLocal.description
-  }
+
   axios.post(`${API_URL}/create-task`, taskLocal)
+  .then(()=>   router.push('/'))
+  .catch((error)=>{  habilitaModalErro.value=true;
+    if (error.response.data.errors){
+      const errors = error.response.data.errors;
+      Object.values(errors).forEach((msgs: any) => {
+      //@ts-ignore
+       msgs.forEach(msg => {
+        errorCreate.push(msg);
+        });
+     })
+    }
+    
+    })
 
 }
  
