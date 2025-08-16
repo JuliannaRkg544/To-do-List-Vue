@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 import Header from '../components/Header.vue';
-import { onBeforeMount, reactive, ref, type Ref } from 'vue';
+import { onBeforeMount, reactive, ref, type Reactive, type Ref } from 'vue';
 //@ts-ignore
 import ModalError from '../utils/ModalError.vue'
 //@ts-ignore
@@ -13,15 +13,16 @@ let errorMessage = reactive([""])
 let habilitaModalDelete: Ref<boolean> = ref(false)
 let habilitaModalErro: Ref<boolean> = ref(false)
 
-const tasks: Ref<{id:string; title:string; is_done:boolean; description:string}[]> = ref([])
+let tasks: Reactive<{id:string; title:string; is_done:boolean; description:string}[]> = reactive([])
 
  onBeforeMount(() => { axios.get(`${API_URL}/get-all-tasks`)
   .then((res)=>{
-  tasks.value = res.data;
+  Object.assign(tasks, res.data)
+  console.log()
  })
  .catch((error=>{
   console.error(error.response?.data || error.message)
-  errorMessage = error.message;
+  errorMessage.push(error.message)
   habilitaModalErro.value = true
  }))
 })
@@ -30,7 +31,7 @@ const tasks: Ref<{id:string; title:string; is_done:boolean; description:string}[
  function removeTaskDeletedFromTasks(){
   axios.delete(`${API_URL}/delete-task/${taskIdDelete}`)
   .then((res)=> {
-    tasks.value = tasks.value.filter(task => task.id !== taskIdDelete);
+    tasks = tasks.filter(task => task.id !== taskIdDelete);
     habilitaModalDelete.value = false
   })
   .catch((error=>{
@@ -46,9 +47,16 @@ function modalDelete(id:string){
 
 }
 
+function markTask(id:string, isDone:boolean){
+  axios.patch(`${API_URL}/update-task-done/${id}`, {is_done:!isDone})
+       .then(()=> {const task = tasks.find(t => t.id === id)
+                    if (task) task.is_done = !isDone })
+}
+
 function closeModal(){
   habilitaModalDelete.value = false
   habilitaModalErro.value = false
+  errorMessage = [""]
 }
 
 </script>
@@ -59,32 +67,26 @@ function closeModal(){
   <Header />
   <div class="container py-4">
     <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-
-       
+      <div class="col-md-5 text-center">       
         <RouterLink to="/task-create">
           <button type="button" class="btn btn-primary btn-home">+</button>
         </RouterLink>
-
-     
         <p v-if="tasks.length === 0" class="h5 mb-3">Adicione uma tarefa</p>
-
-      
         <div v-else>
           <div
-            class="task"
+            class="task "
             v-for="task in tasks"
             :key="task.id"
+            :class="{'task-done':task.is_done}"           
           >
             <RouterLink :to="`/task-update/${task.id}`">
               <span>{{ task.title }}</span>
             </RouterLink>
 
             <div class="trash-container d-flex justify-content-center align-items-center">
-              <img
-                src="../assets/trash-icon.png"
-                @click="modalDelete(task.id)"
-              />
+              <ion-icon v-if="task.is_done" name="checkbox" @click = "markTask(task.id,task.is_done)" ></ion-icon>
+              <ion-icon v-else name="checkbox-outline" @click = "markTask(task.id, task.is_done)" ></ion-icon>
+              <ion-icon name="trash-outline"  @click="modalDelete(task.id)"></ion-icon>
             </div>
           </div>
         </div>
@@ -98,6 +100,10 @@ function closeModal(){
 </template>
 
 <style>
+ion-icon {
+  font-size: 22px;
+  padding: 3px;
+}
 .container-home{
   background-color: #f2f2f2;
     min-height: calc(100vh - 68px);
@@ -121,11 +127,15 @@ function closeModal(){
 }
 
 .btn-home:active {
-  background-color: #7a837a !important; /* Azul mais escuro no clique */
+  background-color: #7a837a !important;
+}
+.task-done, .task-done>p{
+   border: 1px solid rgb(240, 100, 100) !important;
+    background-color: #e9e9e9 !important;
 }
 .task{
   background-color: #fff;
-  border: 1px solid #eee;         /* Corrigido: adicionado 'solid' */
+  border: 1px solid #eee;        
   border-radius: 5px;
   padding: 5px 10px;
   margin-bottom: 5px;
@@ -133,7 +143,7 @@ function closeModal(){
   height: 60px;
   transition: background-color 0.3s ease;
 
-  display: flex !important;      /* Use com moderação o '!important' */
+  display: flex !important;     
   justify-content: space-between;
   align-items: center;
   
@@ -141,7 +151,7 @@ function closeModal(){
 
 
 .task:hover {
-  background-color: #e9e9e9 !important; /* Azul mais escuro no clique */
+  background-color: #e9e9e9 !important;
 }
 .task a {
   text-decoration: none;

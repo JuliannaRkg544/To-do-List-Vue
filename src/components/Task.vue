@@ -4,7 +4,6 @@ import axios from 'axios';
 import Update from '../views/Update.vue';
 import { ref } from 'vue';
 import { defineProps, defineEmits  } from 'vue';
-import { RouterLink } from 'vue-router';
 import type { Ref } from 'vue';
 //@ts-ignore
 import ModalError from '../utils/ModalError.vue';
@@ -34,10 +33,7 @@ function closeModal(){
    
     <div v-if = "isTaskFechada" class="task" @click="()=>{isTaskFechada=!isTaskFechada; emit('eventoPersonalizado')}">
         <span>{{data.title}} {{ isTaskFechada }}</span>
-        <div class="trash-container d-flex justify-content-center align-items-center"  >
-          <img  src="../assets/trash-icon.png"  />
-
-        </div>
+        
     </div>
      <Update v-else :data="data"  />
      <ModalError v-show="habilitaModalErro"  @close="closeModal" :ref="errorMessage" />

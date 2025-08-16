@@ -38,6 +38,7 @@ let taskLocal = reactive({
 
 function closeModal(){
   habilitaModalErro.value = false
+  errorCreate = [""]
 }
 function createTask(){
 
