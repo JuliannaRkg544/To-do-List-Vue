@@ -43,7 +43,7 @@ const emit = defineEmits(["close", "delete"]);
 <style>
 .container-modal {
   position: absolute;
-  top: 50px; /* distancia do topo */
+  top: 50px;
   left: 50%;
   transform: translateX(-50%);
   background: white;

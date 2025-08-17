@@ -10,7 +10,7 @@ import Loading from "../utils/Loading.vue";
 
 const API_URL = import.meta.env.VITE_API_URL;
 let taskIdDelete: string = "";
-let errorMessage = reactive([""]);
+let errorMessage: Reactive<string[]> = reactive([""]);
 let habilitaModalDelete: Ref<boolean> = ref(false);
 let habilitaModalErro: Ref<boolean> = ref(false);
 let habilitaLoading: Ref<boolean> = ref(false);
@@ -28,10 +28,14 @@ onBeforeMount(() => {
      habilitaLoading.value = false
     })
     .catch((error) => {
-      console.error(error.response?.data || error.message);
-      errorMessage.push(error.message);
       habilitaModalErro.value = true;
-      habilitaLoading.value = false
+      habilitaLoading.value = false;
+       if (error.response?.data){
+        errorMessage.push(error.response.data.message)
+      }
+      else {
+        errorMessage.push(error.message)
+      }
     });
 });
 
@@ -45,10 +49,14 @@ function removeTaskDeletedFromTasks() {
       habilitaLoading.value = false
     })
     .catch((error) => {
-      console.error(error.response?.data || error.message);
-      errorMessage = error.message;
       habilitaModalErro.value = true;
       habilitaLoading.value = false
+      if (error.response?.data){
+        errorMessage.push(error.response.data.message)
+      }
+      else {
+        errorMessage.push(error.message)
+      }
     });
 }
 

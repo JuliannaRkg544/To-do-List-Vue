@@ -87,7 +87,7 @@ function createTask() {
     .catch((error) => {
       habilitaModalErro.value = true;
       habilitaLoading.value = false
-      if (error.response.data.errors) {
+      if (error.response?.data) {
         const errors = error.response.data.errors;
         Object.values(errors).forEach((msgs: any) => {
           //@ts-ignore
@@ -95,6 +95,9 @@ function createTask() {
             errorCreate.push(msg);
           });
         });
+      }
+      else {
+        errorCreate.push(error.message)
       }
     });
 }
