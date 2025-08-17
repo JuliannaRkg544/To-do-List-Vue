@@ -1,13 +1,13 @@
 <template>
-  <nav class="navbar bg-body-tertiary green"> 
-    <div class="container-fluid"> 
+  <nav class="navbar bg-body-tertiary green">
+    <div class="container-fluid">
       <span class="navbar-brand mb-0 h1 title">To do List</span>
     </div>
   </nav>
 </template>
 
 <style>
-.title{
+.title {
   font-family: "Playball", cursive;
   font-weight: 400;
   font-style: normal;
@@ -15,12 +15,12 @@
   font-size: 35px;
 }
 
-.title:hover{
+.title:hover {
   cursor: pointer;
   color: #fefefe;
 }
 
-.green{
-    background-color: #8FC549 !important ;
+.green {
+  background-color: #8fc549 !important ;
 }
 </style>
