@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from "axios";
 //@ts-ignore
 import Update from "../views/Update.vue";
 import { reactive, ref } from "vue";
@@ -7,7 +6,6 @@ import { defineProps, defineEmits } from "vue";
 import type { Ref } from "vue";
 //@ts-ignore
 import ModalError from "../utils/ModalError.vue";
-const API_URL = import.meta.env.VITE_API_URL;
 
 const emit = defineEmits(["task-deleted", "eventoPersonalizado"]);
 let isTaskFechada: Ref<boolean> = ref(true);

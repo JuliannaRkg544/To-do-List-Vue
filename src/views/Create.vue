@@ -53,7 +53,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { RouterLink, useRoute, useRouter } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import Loading from "../utils/Loading.vue";
 import Header from "../components/Header.vue";
 import { reactive, ref } from "vue";

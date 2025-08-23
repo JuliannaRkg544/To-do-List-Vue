@@ -1,11 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import Signin from "../views/Signin.vue";
 import Login from "../views/Login.vue";
 import Create from "../views/Create.vue";
 import Update from "../views/Update.vue";
 
-const routes = [
+
+// Tipagem explícita para as rotas
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
@@ -13,23 +15,24 @@ const routes = [
   },
   {
     path: "/signin",
-    name: "/signin",
+    name: "Signin",
     component: Signin,
   },
   {
     path: "/login",
-    name: "/login",
+    name: "Login",
     component: Login,
   },
   {
     path: "/task-create",
-    name: "/create",
+    name: "Create",
     component: Create,
   },
   {
     path: "/task-update/:id",
-    name: "/update",
+    name: "Update",
     component: Update,
+    props: true, // permite acessar `id` como prop dentro do componente
   },
 ];
 

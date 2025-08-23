@@ -44,7 +44,7 @@ function removeTaskDeletedFromTasks() {
   habilitaLoading.value = true
   axios
     .delete(`${API_URL}/delete-task/${taskIdDelete}`)
-    .then((res) => {
+    .then(() => {
       tasks = tasks.filter((task) => task.id !== taskIdDelete);
       habilitaLoading.value = false
     })
@@ -95,6 +95,7 @@ function closeModal() {
         <RouterLink to="/task-create">
            <button v-show="!habilitaLoading" type="button" class="btn btn-primary btn-home">+</button>
         </RouterLink>
+        <div v-show="tasks.length===0" > Adicione uma Tarefa </div>
           <div
             class="task"
             v-for="task in tasks"
