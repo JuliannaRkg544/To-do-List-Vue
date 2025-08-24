@@ -203,4 +203,12 @@ ion-icon {
   height: 40px;
   cursor: pointer;
 }
+
+  @media screen and (max-width: 768px) {
+    .task {
+     min-width: 300px;
+     max-width: 300px;
+       margin: 0 auto;
+    }
+  }
 </style>
