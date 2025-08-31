@@ -31,7 +31,6 @@ const router = useRouter();
 const route = useRoute();
 const API_URL = import.meta.env.VITE_API_URL;
 const grupos:Reactive<{name:string, id:string, group_id:string}>[] = reactive([])
-const group_id = route.params.id
 onMounted(()=>{
   axios.get(`${API_URL}/get-all-groups`)
         .then((res)=>{
