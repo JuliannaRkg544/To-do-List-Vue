@@ -14,6 +14,10 @@ import Groups from "../views/Groups.vue";
 // Tipagem explícita para as rotas
 const routes: Array<RouteRecordRaw> = [
   {
+    path: "/",
+     redirect: "/groups"
+  },
+  {
     path: "/:id",
     name: "Home",
     component: Home,
