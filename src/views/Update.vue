@@ -28,7 +28,7 @@
       >
         Salvar
       </div>
-      <RouterLink to="/">
+      <RouterLink :to="'/' + group_id" >
         <div
           class="btn"
           style="
@@ -65,6 +65,7 @@ let habilitaLoading = ref(false)
 let errorMessage = reactive([""])
 const taskid = route.params.id;
 const API_URL = import.meta.env.VITE_API_URL;
+let group_id:string = ""
 let taskLocal = reactive({
   title: "",
   description: "",
@@ -76,6 +77,7 @@ onBeforeMount(() => {
     .get(`${API_URL}/get-task-byId/${taskid}`)
     .then((res) => {
       Object.assign(taskLocal, res.data);
+      group_id = res.data.group_id
       habilitaLoading.value = false
     })
     .catch((error) => {
@@ -92,7 +94,7 @@ function updateTask() {
   };
   axios
     .patch(`${API_URL}/update-task/${taskid}`, body)
-    .then(() => router.push("/"))
+    .then(() => router.push(`/${group_id}`))
     .catch((err)=> {habilitaModalErro.value = true ; 
        if (err.response.data.errors) {
         const errors = err.response.data.errors;

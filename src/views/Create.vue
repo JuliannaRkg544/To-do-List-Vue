@@ -30,7 +30,7 @@
       >
         Salvar
       </div>
-      <RouterLink to="/">
+      <RouterLink to="/groups">
         <div
           class="btn"
           style="
@@ -53,7 +53,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import Loading from "../utils/Loading.vue";
 import Header from "../components/Header.vue";
 import { reactive, ref } from "vue";
@@ -69,10 +69,12 @@ const router = useRouter();
 let habilitaModalErro = ref(false);
 let habilitaLoading = ref(false);
 let errorCreate = reactive([""]);
-
+const route = useRoute();
+const group_id = route.params.id;
 let taskLocal = reactive({
   title: "",
   description: "",
+  group_id
 });
 
 function closeModal() {
@@ -83,7 +85,7 @@ function createTask() {
   habilitaLoading.value = true
   axios
     .post(`${API_URL}/create-task`, taskLocal)
-    .then(() => {router.push("/"); habilitaLoading.value = false} )
+    .then(() => {router.push(`/${group_id}`); habilitaLoading.value = false} )
     .catch((error) => {
       habilitaModalErro.value = true;
       habilitaLoading.value = false

@@ -7,6 +7,11 @@ import ModalError from "../utils/ModalError.vue";
 //@ts-ignore
 import ModalWarn from "../utils/ModalWarn.vue";
 import Loading from "../utils/Loading.vue";
+import { useRoute } from "vue-router";
+import router from "../router";
+
+const route = useRoute()
+const group_id = route.params.id;
 
 const API_URL = import.meta.env.VITE_API_URL;
 let taskIdDelete: string = "";
@@ -22,7 +27,7 @@ let tasks: Reactive<
 onBeforeMount(() => {
   habilitaLoading.value = true;
   axios
-    .get(`${API_URL}/get-all-tasks`)
+    .get(`${API_URL}/get-all-tasks/${group_id}`)
     .then((res) => {
       Object.assign(tasks, res.data);
      habilitaLoading.value = false
@@ -65,6 +70,10 @@ function modalDelete(id: string) {
   habilitaModalDelete.value = true;
 }
 
+function tarefasCriar(){
+  router.push(`/task-create/${group_id}`)
+}
+
 function markTask(id: string, isDone: boolean) {
   const task = tasks.find((t) => t.id === id);
   if (task) task.is_done = !isDone;
@@ -91,10 +100,32 @@ function closeModal() {
     <div class="row justify-content-center">
       <div class="col-md-5 text-center">
       <Loading v-if="habilitaLoading"/>
-        <div>
-        <RouterLink to="/task-create">
-           <button v-show="!habilitaLoading" type="button" class="btn btn-primary btn-home">+</button>
-        </RouterLink>
+        <div  >
+          <div class="mb-3" >
+           <div
+            @click="tarefasCriar"
+            v-show="!habilitaLoading"
+            class="btn btn-primary"
+            style="
+              background-color: #8fc549;
+              font-weight: 600;
+              border: none;
+              margin-right: 5px;
+            ">
+        Adicionar
+      </div>
+           <RouterLink to="/groups">
+             <div 
+                class="btn"
+                style="
+                  background-color: #fff;
+                  border: none;
+                  font-weight: 600;
+                  color: #8fc549;
+                " >voltar
+                </div>
+           </RouterLink>
+         </div>
         <div v-show="tasks.length===0" > Adicione uma Tarefa </div>
           <div
             class="task"

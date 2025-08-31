@@ -4,12 +4,14 @@ import Signin from "../views/Signin.vue";
 import Login from "../views/Login.vue";
 import Create from "../views/Create.vue";
 import Update from "../views/Update.vue";
+import CreateGroup from "../views/CreateGroup.vue";
+import Groups from "../views/Groups.vue";
 
 
 // Tipagem explícita para as rotas
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
+    path: "/:id",
     name: "Home",
     component: Home,
   },
@@ -24,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
   },
   {
-    path: "/task-create",
+    path: "/task-create/:id",
     name: "Create",
     component: Create,
   },
@@ -33,6 +35,16 @@ const routes: Array<RouteRecordRaw> = [
     name: "Update",
     component: Update,
     props: true, // permite acessar `id` como prop dentro do componente
+  },
+   {
+    path: "/groups",
+    name: "AllGroups",
+    component: Groups,
+  },
+  {
+    path: "/group-create",
+    name: "CreateGroup",
+    component: CreateGroup,
   },
 ];
 
