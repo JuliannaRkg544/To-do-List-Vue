@@ -28,7 +28,7 @@
       >
         Salvar
       </div>
-      <RouterLink :to="'/' + group_id" >
+      <RouterLink :to="'/' + group_id">
         <div
           class="btn"
           style="
@@ -42,7 +42,7 @@
         </div>
       </RouterLink>
     </div>
-    <ModalError 
+    <ModalError
       v-if="habilitaModalErro"
       @close="closeModal"
       :refError="errorMessage"
@@ -60,34 +60,33 @@ import axios from "axios";
 import ModalError from "../utils/ModalError.vue";
 const route = useRoute();
 const router = useRouter();
-let habilitaModalErro = ref(false)
-let habilitaLoading = ref(false)
-let errorMessage = reactive([""])
+let habilitaModalErro = ref(false);
+let habilitaLoading = ref(false);
+let errorMessage = reactive([""]);
 const taskid = route.params.id;
 const API_URL = import.meta.env.VITE_API_URL;
-let group_id:string = ""
+let group_id: string = "";
 let taskLocal = reactive({
   title: "",
   description: "",
 });
 
 onBeforeMount(() => {
-  habilitaLoading.value = true
+  habilitaLoading.value = true;
   axios
     .get(`${API_URL}/get-task-byId/${taskid}`)
     .then((res) => {
       Object.assign(taskLocal, res.data);
-      group_id = res.data.group_id
-      habilitaLoading.value = false
+      group_id = res.data.group_id;
+      habilitaLoading.value = false;
     })
     .catch((error) => {
-      habilitaLoading.value = false
+      habilitaLoading.value = false;
       console.error(error.response?.data || error.message);
     });
 });
 
 function updateTask() {
-  
   const body = {
     title: taskLocal.title,
     description: taskLocal.description,
@@ -95,8 +94,9 @@ function updateTask() {
   axios
     .patch(`${API_URL}/update-task/${taskid}`, body)
     .then(() => router.push(`/${group_id}`))
-    .catch((err)=> {habilitaModalErro.value = true ; 
-       if (err.response.data.errors) {
+    .catch((err) => {
+      habilitaModalErro.value = true;
+      if (err.response.data.errors) {
         const errors = err.response.data.errors;
         Object.values(errors).forEach((msgs: any) => {
           //@ts-ignore
@@ -104,7 +104,8 @@ function updateTask() {
             errorMessage.push(msg);
           });
         });
-      }} )
+      }
+    });
 }
 
 function closeModal() {

@@ -10,7 +10,7 @@ import Loading from "../utils/Loading.vue";
 import { useRoute } from "vue-router";
 import router from "../router";
 
-const route = useRoute()
+const route = useRoute();
 const group_id = route.params.id;
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -30,37 +30,35 @@ onBeforeMount(() => {
     .get(`${API_URL}/get-all-tasks/${group_id}`)
     .then((res) => {
       Object.assign(tasks, res.data);
-     habilitaLoading.value = false
+      habilitaLoading.value = false;
     })
     .catch((error) => {
       habilitaModalErro.value = true;
       habilitaLoading.value = false;
-       if (error.response?.data){
-        errorMessage.push(error.response.data.message)
-      }
-      else {
-        errorMessage.push(error.message)
+      if (error.response?.data) {
+        errorMessage.push(error.response.data.message);
+      } else {
+        errorMessage.push(error.message);
       }
     });
 });
 
 function removeTaskDeletedFromTasks() {
   habilitaModalDelete.value = false;
-  habilitaLoading.value = true
+  habilitaLoading.value = true;
   axios
     .delete(`${API_URL}/delete-task/${taskIdDelete}`)
     .then(() => {
       tasks = tasks.filter((task) => task.id !== taskIdDelete);
-      habilitaLoading.value = false
+      habilitaLoading.value = false;
     })
     .catch((error) => {
       habilitaModalErro.value = true;
-      habilitaLoading.value = false
-      if (error.response?.data){
-        errorMessage.push(error.response.data.message)
-      }
-      else {
-        errorMessage.push(error.message)
+      habilitaLoading.value = false;
+      if (error.response?.data) {
+        errorMessage.push(error.response.data.message);
+      } else {
+        errorMessage.push(error.message);
       }
     });
 }
@@ -70,8 +68,8 @@ function modalDelete(id: string) {
   habilitaModalDelete.value = true;
 }
 
-function tarefasCriar(){
-  router.push(`/task-create/${group_id}`)
+function tarefasCriar() {
+  router.push(`/task-create/${group_id}`);
 }
 
 function markTask(id: string, isDone: boolean) {
@@ -99,34 +97,37 @@ function closeModal() {
   <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-5 text-center">
-      <Loading v-if="habilitaLoading"/>
-        <div  >
-          <div class="mb-3" >
-           <div
-            @click="tarefasCriar"
-            v-show="!habilitaLoading"
-            class="btn btn-primary"
-            style="
-              background-color: #8fc549;
-              font-weight: 600;
-              border: none;
-              margin-right: 5px;
-            ">
-        Adicionar
-      </div>
-           <RouterLink to="/groups">
-             <div 
+        <Loading v-if="habilitaLoading" />
+        <div>
+          <div class="mb-3">
+            <div
+              @click="tarefasCriar"
+              v-show="!habilitaLoading"
+              class="btn btn-primary"
+              style="
+                background-color: #8fc549;
+                font-weight: 600;
+                border: none;
+                margin-right: 5px;
+              "
+            >
+              Adicionar
+            </div>
+            <RouterLink to="/groups">
+              <div
                 class="btn"
                 style="
                   background-color: #fff;
                   border: none;
                   font-weight: 600;
                   color: #8fc549;
-                " >voltar
-                </div>
-           </RouterLink>
-         </div>
-        <div v-show="tasks.length===0" > Adicione uma Tarefa </div>
+                "
+              >
+                voltar
+              </div>
+            </RouterLink>
+          </div>
+          <div v-show="tasks.length === 0">Adicione uma Tarefa</div>
           <div
             class="task"
             v-for="task in tasks"
@@ -235,11 +236,11 @@ ion-icon {
   cursor: pointer;
 }
 
-  @media screen and (max-width: 768px) {
-    .task {
-     min-width: 300px;
-     max-width: 300px;
-       margin: 0 auto;
-    }
+@media screen and (max-width: 768px) {
+  .task {
+    min-width: 300px;
+    max-width: 300px;
+    margin: 0 auto;
   }
+}
 </style>

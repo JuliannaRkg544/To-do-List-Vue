@@ -74,7 +74,7 @@ const group_id = route.params.id;
 let taskLocal = reactive({
   title: "",
   description: "",
-  group_id
+  group_id,
 });
 
 function closeModal() {
@@ -82,13 +82,16 @@ function closeModal() {
   errorCreate = [""];
 }
 function createTask() {
-  habilitaLoading.value = true
+  habilitaLoading.value = true;
   axios
     .post(`${API_URL}/create-task`, taskLocal)
-    .then(() => {router.push(`/${group_id}`); habilitaLoading.value = false} )
+    .then(() => {
+      router.push(`/${group_id}`);
+      habilitaLoading.value = false;
+    })
     .catch((error) => {
       habilitaModalErro.value = true;
-      habilitaLoading.value = false
+      habilitaLoading.value = false;
       if (error.response?.data) {
         const errors = error.response.data.errors;
         Object.values(errors).forEach((msgs: any) => {
@@ -97,9 +100,8 @@ function createTask() {
             errorCreate.push(msg);
           });
         });
-      }
-      else {
-        errorCreate.push(error.message)
+      } else {
+        errorCreate.push(error.message);
       }
     });
 }
