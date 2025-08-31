@@ -25,12 +25,12 @@
 <script setup lang="ts" >
 import axios from 'axios';
 import Header from '../components/Header.vue';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, type Reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 const API_URL = import.meta.env.VITE_API_URL;
-const grupos = reactive([])
+const grupos:Reactive<{name:string, id:string, group_id:string}>[] = reactive([])
 const group_id = route.params.id
 onMounted(()=>{
   axios.get(`${API_URL}/get-all-groups`)
